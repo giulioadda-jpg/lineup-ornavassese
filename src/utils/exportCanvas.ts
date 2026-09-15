@@ -191,8 +191,8 @@ export async function generateLineupCanvas({
   ctx.letterSpacing = '2px';
   ctx.fillText(`MODULO ${module.label}`, badgeX + badgeWidth / 2, badgeY + badgeHeight / 2);
 
-  // 4. Render the 11 Player Circles perfectly arranged (Enlarged diameter: 168px)
-  const circleRadius = 84; // 168px diameter in 1080x1920 (enlarged for prominent player photos)
+  // 4. Render the 11 Player Circles perfectly arranged (Enlarged diameter: 220px)
+  const circleRadius = 110; // 220px diameter for large prominent player photos
 
   for (const pos of module.positions) {
     const cx = (pos.x / 100) * width;
@@ -218,15 +218,15 @@ export async function generateLineupCanvas({
         const playerImg = await loadImage(playerPhotoSrc);
         ctx.save();
         ctx.beginPath();
-        ctx.arc(cx, cy, circleRadius - 3.5, 0, Math.PI * 2);
+        ctx.arc(cx, cy, circleRadius - 4, 0, Math.PI * 2);
         ctx.clip();
         
         // Center-crop draw
         const imgRatio = playerImg.width / playerImg.height;
-        let drawW = (circleRadius - 3.5) * 2;
-        let drawH = (circleRadius - 3.5) * 2;
-        let drawX = cx - (circleRadius - 3.5);
-        let drawY = cy - (circleRadius - 3.5);
+        let drawW = (circleRadius - 4) * 2;
+        let drawH = (circleRadius - 4) * 2;
+        let drawX = cx - (circleRadius - 4);
+        let drawY = cy - (circleRadius - 4);
 
         if (imgRatio > 1) {
           drawW = drawH * imgRatio;
@@ -248,7 +248,7 @@ export async function generateLineupCanvas({
       // Draw empty circle placeholder or default avatar
       ctx.save();
       ctx.beginPath();
-      ctx.arc(cx, cy, circleRadius - 3.5, 0, Math.PI * 2);
+      ctx.arc(cx, cy, circleRadius - 4, 0, Math.PI * 2);
       ctx.fillStyle = '#1c1d22';
       ctx.fill();
 
@@ -258,12 +258,12 @@ export async function generateLineupCanvas({
       if (player) {
         // Player surname initials
         const initials = player.name.slice(0, 2).toUpperCase();
-        ctx.font = '800 42px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.font = '800 52px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.fillStyle = '#ffffff';
         ctx.fillText(initials, cx, cy);
       } else {
         // Empty slot label
-        ctx.font = '700 28px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.font = '700 32px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
         ctx.fillText(pos.label, cx, cy);
       }
@@ -275,14 +275,14 @@ export async function generateLineupCanvas({
     ctx.beginPath();
     ctx.arc(cx, cy, circleRadius, 0, Math.PI * 2);
     ctx.strokeStyle = player ? '#ffffff' : 'rgba(255, 255, 255, 0.25)';
-    ctx.lineWidth = 4.5;
+    ctx.lineWidth = 5;
     ctx.stroke();
 
     // Subtle inner glowing rim
     ctx.beginPath();
-    ctx.arc(cx, cy, circleRadius - 3.5, 0, Math.PI * 2);
+    ctx.arc(cx, cy, circleRadius - 4, 0, Math.PI * 2);
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 2;
     ctx.stroke();
     ctx.restore();
 
@@ -295,7 +295,7 @@ export async function generateLineupCanvas({
     const pillW = Math.max(textMetrics.width + 42, 130);
     const pillH = 44;
     const pillX = cx - pillW / 2;
-    const pillY = cy + circleRadius + 12;
+    const pillY = cy + circleRadius + 10;
 
     // Pill background
     ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
