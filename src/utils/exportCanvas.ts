@@ -210,11 +210,12 @@ export async function generateLineupCanvas({
     ctx.fill();
     ctx.restore();
 
-    // Fill circle with player image if available
+    // Fill circle with player image if available (supports both photo and photoUrl)
     let photoDrawn = false;
-    if (player?.photoUrl) {
+    const playerPhotoSrc = player?.photo || player?.photoUrl;
+    if (playerPhotoSrc) {
       try {
-        const playerImg = await loadImage(player.photoUrl);
+        const playerImg = await loadImage(playerPhotoSrc);
         ctx.save();
         ctx.beginPath();
         ctx.arc(cx, cy, circleRadius - 3.5, 0, Math.PI * 2);
