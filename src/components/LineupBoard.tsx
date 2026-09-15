@@ -85,22 +85,20 @@ export const LineupBoard: React.FC<LineupBoardProps> = ({
               id={`player-circle-slot-${pos.slotId}`}
               title={`Clicca per cambiare ${pos.label}: ${player ? player.name : 'Vuoto'}`}
             >
-              {/* FUT Card Container */}
+              {/* FUT Card Container - Senza bordi né anelli */}
               <div
-                className={`relative w-[72px] h-[90px] sm:w-[88px] sm:h-[110px] md:w-[104px] md:h-[130px] rounded-xl transition-all duration-200 shadow-2xl overflow-hidden flex items-center justify-center ${
-                  isSelected
-                    ? 'ring-4 ring-white scale-110 shadow-white/30'
-                    : 'ring-1 ring-white/20 hover:ring-white/60 hover:scale-105'
+                className={`relative w-[72px] h-[90px] sm:w-[88px] sm:h-[110px] md:w-[104px] md:h-[130px] transition-all duration-200 flex items-center justify-center ${
+                  isSelected ? 'scale-110 drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]' : 'hover:scale-105'
                 }`}
               >
                 {playerPhotoSrc ? (
                   <img
                     src={playerPhotoSrc}
                     alt={player?.name || pos.label}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain drop-shadow-xl"
                   />
                 ) : (
-                  <div className="w-full h-full bg-zinc-900/90 border border-dashed border-zinc-700 flex flex-col items-center justify-center text-zinc-400 group-hover:text-white transition-colors">
+                  <div className="w-full h-full bg-zinc-900/90 rounded-xl border border-dashed border-zinc-700 flex flex-col items-center justify-center text-zinc-400 group-hover:text-white transition-colors">
                     <Plus className="w-4 h-4 sm:w-5 sm:h-5 mb-1" />
                     <span className="text-[9px] sm:text-[10px] font-extrabold tracking-wider">
                       {pos.label}
