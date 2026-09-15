@@ -176,8 +176,8 @@ export async function generateLineupCanvas({
   ctx.letterSpacing = '2px';
   ctx.fillText(`MODULO ${module.label}`, badgeX + badgeWidth / 2, badgeY + badgeHeight / 2);
 
-  // 4. Render FUT Cards maintaining exact natural aspect ratio (preserving proportions without distortion)
-  const targetCardWidth = 175;
+  // 4. Render FUT Cards - Ingrandite a 250px di larghezza mantenendo le proporzioni
+  const targetCardWidth = 250;
 
   for (const pos of module.positions) {
     const cx = (pos.x / 100) * width;
@@ -199,8 +199,8 @@ export async function generateLineupCanvas({
 
         ctx.save();
         ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
-        ctx.shadowBlur = 24;
-        ctx.shadowOffsetY = 10;
+        ctx.shadowBlur = 28;
+        ctx.shadowOffsetY = 12;
         ctx.drawImage(cardImg, cardX, cardY, cardW, cardH);
         ctx.restore();
         cardDrawn = true;
@@ -211,7 +211,7 @@ export async function generateLineupCanvas({
 
     if (!cardDrawn) {
       const cardW = targetCardWidth;
-      const cardH = 220;
+      const cardH = 312;
       const cardX = cx - cardW / 2;
       const cardY = cy - cardH / 2;
 
@@ -225,7 +225,7 @@ export async function generateLineupCanvas({
 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = '800 32px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      ctx.font = '800 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillStyle = '#ffffff';
       ctx.fillText(player ? player.name.slice(0, 3).toUpperCase() : pos.label, cx, cy);
       ctx.restore();
@@ -235,7 +235,7 @@ export async function generateLineupCanvas({
   return canvas;
 }
 
-export async function downloadLineupGraphic(options: ExportLineupOptions) {
+export async function downloadLineupGraphic(options:ExportLineupOptions) {
   const canvas = await generateLineupCanvas(options);
   
   return new Promise<void>((resolve, reject) => {
