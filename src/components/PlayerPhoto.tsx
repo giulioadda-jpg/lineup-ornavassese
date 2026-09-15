@@ -19,7 +19,6 @@ export const PlayerPhoto: React.FC<PlayerPhotoProps> = ({
 }) => {
   const [hasError, setHasError] = useState(false);
 
-  // Reset error state if player or photo changes
   useEffect(() => {
     setHasError(false);
   }, [player?.id, player?.photo, player?.photoUrl]);
@@ -35,8 +34,8 @@ export const PlayerPhoto: React.FC<PlayerPhotoProps> = ({
   const role = player.role || 'CEN';
   const surname = player.name || 'GIOCATORE';
   const fallbackSvg = generatePlayerAvatarSvg(surname, role);
-  
-  // Supporta sia 'photo' che 'photoUrl'
+
+  // Legge sia 'photo' che 'photoUrl' (supporta maiuscole e minuscole)
   const activePhoto = player.photo || player.photoUrl;
   const photoSrc = !hasError && activePhoto ? activePhoto : fallbackSvg;
 
