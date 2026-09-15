@@ -19,10 +19,10 @@ export const PlayerPhoto: React.FC<PlayerPhotoProps> = ({
 }) => {
   const [hasError, setHasError] = useState(false);
 
-  // Reset error state if player or photoUrl changes
+  // Reset error state if player or photo changes
   useEffect(() => {
     setHasError(false);
-  }, [player?.id, player?.photoUrl]);
+  }, [player?.id, player?.photo, player?.photoUrl]);
 
   if (!player) {
     return (
@@ -35,7 +35,10 @@ export const PlayerPhoto: React.FC<PlayerPhotoProps> = ({
   const role = player.role || 'CEN';
   const surname = player.name || 'GIOCATORE';
   const fallbackSvg = generatePlayerAvatarSvg(surname, role);
-  const photoSrc = !hasError && player.photoUrl ? player.photoUrl : fallbackSvg;
+  
+  // Supporta sia 'photo' che 'photoUrl'
+  const activePhoto = player.photo || player.photoUrl;
+  const photoSrc = !hasError && activePhoto ? activePhoto : fallbackSvg;
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
