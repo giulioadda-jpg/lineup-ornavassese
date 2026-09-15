@@ -1,0 +1,6 @@
+{
+  "name": "Line Up Formazione",
+  "description": "App grafica per creare ed esportare la formazione della squadra in formato 1080x1920 con foto giocatori e moduli tattici.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
