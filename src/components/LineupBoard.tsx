@@ -1,7 +1,6 @@
 import React from 'react';
 import { ModuleDefinition, Player, TeamConfig } from '../types.ts';
 import { Plus } from 'lucide-react';
-import { PlayerPhoto } from './PlayerPhoto.tsx';
 import { DEFAULT_LOGO_PATH } from '../data/teamLogo.ts';
 
 interface LineupBoardProps {
@@ -19,7 +18,6 @@ export const LineupBoard: React.FC<LineupBoardProps> = ({
   selectedSlotId,
   onSelectSlot,
   teamConfig,
-  onOpenTeamCustomizer,
 }) => {
   return (
     <div
@@ -28,31 +26,23 @@ export const LineupBoard: React.FC<LineupBoardProps> = ({
     >
       {/* Background Pitch Graphics */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Subtle dark radial glow */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900/60 via-[#0a0a0c] to-[#050507]" />
 
-        {/* Pitch lines if enabled */}
         {teamConfig.pitchStyle !== 'pure-black' && (
           <div className="absolute inset-x-4 sm:inset-x-6 top-[16%] bottom-3 border border-white/10 rounded-xl">
-            {/* Halfway line (at the top, facing attacking half) */}
             <div className="absolute top-9 inset-x-0 h-px bg-white/10" />
             <div className="absolute top-9 left-1/2 -translate-x-1/2 w-28 h-14 border-b border-l border-r border-white/10 rounded-b-full" />
-
-            {/* Penalty area (at the bottom) */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/5 h-[19%] border-t border-l border-r border-white/10" />
-            {/* Goal area (6-yard box) */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/3 h-[7.5%] border-t border-l border-r border-white/10" />
-            {/* Penalty spot & arc */}
             <div className="absolute bottom-[13%] left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/20" />
             <div className="absolute bottom-[13%] left-1/2 -translate-x-1/2 w-20 h-10 border-t border-l border-r border-white/10 rounded-t-full -translate-y-full" />
           </div>
         )}
       </div>
 
-      {/* Top Header: Logo + "Line Up" + Module Badge */}
+      {/* Top Header */}
       <div className="absolute top-0 inset-x-0 z-30 px-4 sm:px-5 pt-4 sm:pt-5 pb-2 flex items-center justify-between pointer-events-none">
         <div className="flex items-center gap-3 sm:gap-3.5 pointer-events-auto">
-          {/* Team Logo - Fixed PNG Base64 Logo */}
           <div className="w-10 sm:w-12 md:w-14 shrink-0 flex items-center justify-center">
             <img
               src={DEFAULT_LOGO_PATH}
@@ -61,7 +51,6 @@ export const LineupBoard: React.FC<LineupBoardProps> = ({
             />
           </div>
 
-          {/* Title and Subtitle perfectly aligned */}
           <div className="flex flex-col justify-center">
             <div className="text-[9.5px] sm:text-[11px] font-bold tracking-[0.2em] text-zinc-400 uppercase leading-tight mb-0.5">
               {teamConfig.subtitle || 'XI TITOLARI'}
@@ -72,17 +61,17 @@ export const LineupBoard: React.FC<LineupBoardProps> = ({
           </div>
         </div>
 
-        {/* Module Badge */}
         <div className="pointer-events-auto bg-zinc-900/85 border border-zinc-700/70 text-zinc-200 text-xs font-bold px-3 py-1.5 rounded-full tracking-wider shadow-sm">
           {module.label}
         </div>
       </div>
 
-      {/* Interactive 11 Circles Pitch Area: Exactly 1:1 mapped to 1080x1920 canvas */}
+      {/* Interactive FUT Cards Pitch Area */}
       <div className="absolute inset-0 z-20 pointer-events-none">
         {module.positions.map((pos) => {
           const player = slots[pos.slotId];
           const isSelected = selectedSlotId === pos.slotId;
+          const playerPhotoSrc = player?.photo || player?.photoUrl;
 
           return (
             <div
@@ -96,46 +85,28 @@ export const LineupBoard: React.FC<LineupBoardProps> = ({
               id={`player-circle-slot-${pos.slotId}`}
               title={`Clicca per cambiare ${pos.label}: ${player ? player.name : 'Vuoto'}`}
             >
-              {/* Circle Container */}
-              <div className="relative flex flex-col items-center">
-                {/* Main Circle */}
-                <div
-                  className={`relative w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-full flex items-center justify-center transition-all duration-200 shadow-xl overflow-hidden ${
-                    isSelected
-                      ? 'ring-4 ring-white scale-110 shadow-white/25'
-                      : 'ring-[2.5px] ring-white/90 hover:ring-white hover:scale-105'
-                  } ${
-                    player ? 'bg-zinc-900' : 'bg-zinc-900/90 border-2 border-dashed border-zinc-600'
-                  }`}
-                >
-                  {player ? (
-                    <PlayerPhoto
-                      player={player}
-                      className="w-full h-full rounded-full"
-                      imgClassName="w-full h-full object-cover rounded-full"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center text-zinc-400 group-hover:text-white transition-colors">
-                      <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="text-[8px] sm:text-[9px] font-bold tracking-tighter opacity-80">
-                        {pos.label}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Cognome Pill */}
-                <div
-                  className={`mt-1 sm:mt-1.5 px-2.5 py-0.5 max-w-[95px] sm:max-w-[120px] truncate rounded-full text-center shadow-lg transition-colors duration-150 border ${
-                    isSelected
-                      ? 'bg-white text-zinc-950 font-black border-white'
-                      : 'bg-zinc-950/95 text-white font-extrabold border-zinc-700/90 group-hover:border-zinc-400'
-                  }`}
-                >
-                  <span className="text-[9.5px] sm:text-[11px] tracking-wide uppercase font-sans">
-                    {player ? player.name : pos.label}
-                  </span>
-                </div>
+              {/* FUT Card Container */}
+              <div
+                className={`relative w-[72px] h-[90px] sm:w-[88px] sm:h-[110px] md:w-[104px] md:h-[130px] rounded-xl transition-all duration-200 shadow-2xl overflow-hidden flex items-center justify-center ${
+                  isSelected
+                    ? 'ring-4 ring-white scale-110 shadow-white/30'
+                    : 'ring-1 ring-white/20 hover:ring-white/60 hover:scale-105'
+                }`}
+              >
+                {playerPhotoSrc ? (
+                  <img
+                    src={playerPhotoSrc}
+                    alt={player?.name || pos.label}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-zinc-900/90 border border-dashed border-zinc-700 flex flex-col items-center justify-center text-zinc-400 group-hover:text-white transition-colors">
+                    <Plus className="w-4 h-4 sm:w-5 sm:h-5 mb-1" />
+                    <span className="text-[9px] sm:text-[10px] font-extrabold tracking-wider">
+                      {pos.label}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           );
