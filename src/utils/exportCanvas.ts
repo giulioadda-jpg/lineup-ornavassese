@@ -176,9 +176,8 @@ export async function generateLineupCanvas({
   ctx.letterSpacing = '2px';
   ctx.fillText(`MODULO ${module.label}`, badgeX + badgeWidth / 2, badgeY + badgeHeight / 2);
 
-  // 4. Render FUT Cards directly as rectangles (proportioned to match UI card dimensions, e.g. width: 190, height: 238)
-  const cardW = 190;
-  const cardH = 238;
+  // 4. Render FUT Cards maintaining exact natural aspect ratio (preserving proportions without distortion)
+  const targetCardWidth = 175;
 
   for (const pos of module.positions) {
     const cx = (pos.x / 100) * width;
@@ -186,13 +185,18 @@ export async function generateLineupCanvas({
     const player = slots[pos.slotId];
     const playerPhotoSrc = player?.photo || player?.photoUrl;
 
-    const cardX = cx - cardW / 2;
-    const cardY = cy - cardH / 2;
-
     let cardDrawn = false;
     if (playerPhotoSrc) {
       try {
         const cardImg = await loadImage(playerPhotoSrc);
+        const natW = cardImg.naturalWidth || cardImg.width || 500;
+        const natH = cardImg.naturalHeight || cardImg.height || 600;
+        const cardW = targetCardWidth;
+        const cardH = (targetCardWidth * natH) / natW;
+
+        const cardX = cx - cardW / 2;
+        const cardY = cy - cardH / 2;
+
         ctx.save();
         ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
         ctx.shadowBlur = 24;
@@ -206,7 +210,11 @@ export async function generateLineupCanvas({
     }
 
     if (!cardDrawn) {
-      // Fallback placeholder if no card image is assigned
+      const cardW = targetCardWidth;
+      const cardH = 220;
+      const cardX = cx - cardW / 2;
+      const cardY = cy - cardH / 2;
+
       ctx.save();
       ctx.fillStyle = '#1c1d22';
       drawRoundedRect(ctx, cardX, cardY, cardW, cardH, 16);
